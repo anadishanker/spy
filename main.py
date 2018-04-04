@@ -148,7 +148,8 @@ def send_message():
     print("Message sent... ")
     text = "You : " + text
     chat=spy_details.ChatMessage(text,True)
-    Friends[selection]["Chats"].append(chat)
+    Friends[selection].chats.append(chat)
+    print(text)
 
 
 #####receiving message#####
@@ -157,9 +158,9 @@ def read_message():
     selection = select_a_friend()
     image = raw_input("Name of image to be decoded : ")
     text = Steganography.decode(image)
-    text = Friends[selection]["Name"] + " : " + text
+    text = Friends[selection].Name + " : " + text
     chat = spy_details.ChatMessage(text, True)
-    Friends[selection]["Chats"].append(chat)
+    Friends[selection].chats.append(chat)
     print(text)
 
 
