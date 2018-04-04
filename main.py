@@ -1,6 +1,6 @@
 from steganography.steganography import Steganography
 from datetime import datetime
-
+import spy_details
 print("Hello world")
 print 'what\'s up?'
 print 'Let\'s get started...'
@@ -106,15 +106,16 @@ def add_status(current_status_message):
 #####Friend function start#####
 
 def add_friend():
-    new_friend = {"Name": "", "Salutation": "", "age": 0, "Rating": 0.0, "Chats": [] }
-    new_friend["Name"] =raw_input("Whats your friend spy name?")
-    new_friend["Salutation"] =raw_input("what would be the salutation, Mr. or Mrs??")
-    new_friend["Name"] = new_friend["Salutation"] + " " + new_friend["Name"]
-    new_friend["age"] = int(input("what is friends age?"))
-    new_friend["Rating"] = float(input("what's your friend spy rating??"))
-    if len(new_friend["Name"]) > 0 and 12 < new_friend["age"] < 50:  # add friend
-        Friends.append(new_friend)
-    else:
+    #new_friend = {"Name": "", "Salutation": "", "age": 0, "Rating": 0.0, "Chats": [] }
+    Name=raw_input("Whats your friend spy name?")
+    Salutation=raw_input("what would be the salutation, Mr. or Mrs??")
+    #Name= new_friend["Salutation"] + " " + new_friend["Name"]
+    age = int(input("what is friends age?"))
+    Rating= float(input("what's your friend spy rating??"))
+    if len(Name) > 0 and 12 < age < 50:  # add friend
+        friend_no=spy_details.Spy(Name,Salutation,age,Rating)
+        Friends.append(friend_no)
+    else:      #####invalid details
         print("Sorry we can't add your friend's details please try again.")
     return len(Friends)
 
@@ -122,7 +123,7 @@ def select_a_friend():
     item_no = 0
     if len(Friends)!=0:
         for friend in Friends:
-            print("%d . %s" % (item_no+1, friend["Name"]))
+            print("%d . %s" % (item_no+1, friend.Name))
             item_no = item_no + 1
         friend_no = int(input("Select your Friend : "))
         if friend_no<=len(Friends) and friend_no!=0:
@@ -146,12 +147,8 @@ def send_message():
     Steganography.encode(image, out_path, text)
     print("Message sent... ")
     text = "You : " + text
-    new_chat = {
-        "message": text,
-        "time": datetime.now(),
-        "send_by_me": True
-    }
-    Friends[selection]["Chats"].append(new_chat)
+    chat=spy_details.ChatMessage(text,True)
+    Friends[selection]["Chats"].append(chat)
 
 
 #####receiving message#####
@@ -161,27 +158,22 @@ def read_message():
     image = raw_input("Name of image to be decoded : ")
     text = Steganography.decode(image)
     text = Friends[selection]["Name"] + " : " + text
-    new_chat = {
-        "message": text,
-        "time": datetime.now(),
-        "send_by_me": False
-    }
-    Friends[selection]["Chats"].append(new_chat)
+    chat = spy_details.ChatMessage(text, True)
+    Friends[selection]["Chats"].append(chat)
     print(text)
 
 
 user=raw_input("Do you want to continue with the default user ?(Y/N)")
 new_user=0
 if user=="Y":
+    #####import the default spy objects
     from spy_details import spy
-
-    print('Welcome,%s  %s with %d years of age and %.1f rating. Welcome to SpyChat.... ' % (spy["Salutation"], spy["Name"], spy["age"], spy["Rating"]))
+    print('Welcome,%s  %s with %d years of age and %.1f rating. Welcome to SpyChat.... ' % (spy.Salutation, spy.Name, spy.age, spy.Rating))
+    from spy_details import friend_one,friend_three,friend_two
+    Friends=[friend_one, friend_two, friend_three]
 else:
     new_user=1
     entry()  ######taking details of new user
 STATUS_MESSAGE=['You are in...', 'How are you..?', 'Lets move further']
 Friends=[]
 spy_chat()
-
-####################
-
